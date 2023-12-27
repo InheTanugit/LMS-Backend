@@ -1,19 +1,19 @@
-const Courses = require("../models/courses");
+const Videos = require("../models/videos");
 
-const createCourse = (req,res) => {
-        if(req.user.type !== 'teacher') {
-            return res.json({
-                status: 403,
-                message: "You are not authorized to create a course."
-            })
-        }
-        req.body.teacher_id = req.user.id
-        const course = new Courses(req.body);
-        course.save()
+const createVideo = (req,res) => {
+    if(req.user.type !== 'teacher') {
+        return res.json({
+            status: 403,
+            message: "You are not authorized to create a course."
+        })
+    }
+    req.body.teacher_id = req.user.id
+    const video = new Videos(req.body);
+        video.save()
         .then(result => {
             return res.json({
                 status: 201,
-                message: "Course created successfully"
+                message: "Video added successfully"
             })
         })
         .catch(err => {
@@ -24,14 +24,14 @@ const createCourse = (req,res) => {
         })
 }
 
-
-const getCourses  = (req,res) => {
-    const teacher_id = req.params.teacher_id
-    Courses.find({teacher_id})
+const getVideos = (req,res) => {
+    console.log(req.session.user)
+    const course_id = req.params.course_id
+    Videos.find({course_id})
     .then(result => {
-        return res.status(201).json({
-            status: 201,
-            message: "Course fetched successfully",
+        return res.status(200).json({
+            status: 200,
+            message: "Course videos fetched successfully",
             data: result
         })
     })
@@ -41,15 +41,17 @@ const getCourses  = (req,res) => {
             message: "Bad request"
         })
     })
-
 }
 
-const updateCourse  = (req,res) => {
+const updateCourse = (req,res) => {
+    console.log('Reached')
+    console.log(req.params.course_id)
+    console.log(req.body)
     const course_id = req.params.course_id
     if(req.user.type !== 'teacher') {
         return res.status(403).json({
             status: 403,
-            message: "You are not authorized to update a course."
+            message: "You are not authorized to create a course."
         })
     }
     Courses.findOneAndUpdate({_id: course_id}, req.body)
@@ -68,7 +70,7 @@ const updateCourse  = (req,res) => {
 }
 
 module.exports = {
-    createCourse,
-    getCourses,
+    createVideo,
+    getVideos,
     updateCourse
 }

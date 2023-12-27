@@ -85,8 +85,19 @@ const getUsers = (req,res) => {
     })
 }
 
+const userLogout = (req,res) => {
+    req.logout(function(err) {
+        if (err) { return next(err); }
+        res.status(200).json({
+            status: 200,
+            message: "User has been logged out."
+        })
+      })
+}
+
 module.exports = {
     userRegistration,
     userLogin,
-    getUsers
+    getUsers,
+    userLogout
 }
